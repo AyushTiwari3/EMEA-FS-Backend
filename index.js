@@ -1,9 +1,13 @@
 // Import the express module
 const express = require('express');
-const app = express();
+const { connectToMongoDB } = require('./utils/db'); // import your DB connection
+require('dotenv').config(); // load environment variables
 
-// Define a port number
+const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Connect to MongoDB
+connectToMongoDB();
 
 // Middleware to parse JSON
 app.use(express.json());
