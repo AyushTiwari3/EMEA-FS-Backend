@@ -1,0 +1,28 @@
+IMPORT required_modules
+
+DEFINE puc_validation_blueprint
+
+DEFINE check_puc_validation_route()
+    TRY:
+        RECEIVE_REQUEST_DATA()
+        if rc_number_not_provided:
+            RETURN ERROR_RESPONSE("RC number is required")
+
+        PERFORM_PUC_VALIDATION(rc_number)
+        if puc_validation_error:
+            error_message = EXTRACT_ERROR_MESSAGE(puc_validation_response)
+            RETURN ERROR_RESPONSE(f"Validation Error: {error_message}")
+        EXTRACT_VEHICLE_DETAILS(puc_validation_response)
+        message = DETERMINE_PUC_STATUS(vehicle_pucc_details)
+        reg_no = EXTRACT_REGISTRATION_NUMBER(puc_validation_response)
+        owner_name = EXTRACT_OWNER_NAME(puc_validation_response)
+        model = EXTRACT_VEHICLE_MODEL(puc_validation_response)
+        state = EXTRACT_VEHICLE_STATE(puc_validation_response)
+        FORMAT_RESPONSE_DATA(message, reg_no, owner_name, model, state, vehicle_pucc_details)
+        SAVE_VEHICLE_DETAILS_TO_DATABASE(formatted_data)
+        RETURN SUCCESS_RESPONSE(formatted_data)
+    CATCH Exception:
+        LOG_ERROR(exception)
+        RETURN ERROR_RESPONSE("Error Occurred", exception)
+
+REGISTER puc_validation_blueprint

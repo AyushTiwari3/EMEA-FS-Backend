@@ -1,7 +1,8 @@
-// Import the express module
+// Import required modules
 const express = require('express');
-const { connectToMongoDB } = require('./utils/db'); // import your DB connection
-require('dotenv').config(); // load environment variables
+const { connectToMongoDB } = require('./utils/db');
+const authRoutes = require('./routes/route'); // Auth routes
+require('dotenv').config(); // Load environment variables
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,6 +17,9 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
+
+// Auth routes
+app.use('/api/auth', authRoutes);
 
 // Start the server
 app.listen(PORT, () => {
