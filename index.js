@@ -1,14 +1,18 @@
 // Import required modules
 const express = require('express');
+const cors = require('cors'); // Import cors
 const { connectToMongoDB } = require('./utils/db');
-const routes = require('./routes/route'); // Use a single route file for all routes
+const routes = require('./routes/route');
 require('dotenv').config(); // Load environment variables
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB
 connectToMongoDB();
+
+// Enable CORS for all origins
+app.use(cors());
 
 // Middleware to parse JSON
 app.use(express.json());

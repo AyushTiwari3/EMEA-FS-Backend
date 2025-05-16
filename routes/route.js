@@ -1,17 +1,22 @@
-// Import required modules
 const express = require('express');
 const { register, login } = require('../controllers/authController');
-const { createItem, searchItems, getPdf } = require('../controllers/itemsController');
+const {
+  getAllItems,
+  createItem,
+  searchItems,
+  getPdf
+} = require('../controllers/itemsController');
 
 const router = express.Router();
 
-// Auth routes
-router.post('/auth/register', register); // Register
-router.post('/auth/login', login);       // Login
+// Auth
+router.post('/auth/register', register);
+router.post('/auth/login',    login);
 
-// Item-related routes
-router.post('/items', createItem);       // Item creation
-router.get('/items/search', searchItems); // Search items by query
-router.get('/items/pdf/:id', getPdf);   // Get PDF by item ID
+// Items
+router.get( '/items',         getAllItems);       // ← GET /api/items
+router.get( '/items/search',  searchItems);       // ← GET /api/items/search?query=…
+router.get( '/items/pdf/:id', getPdf);            // ← GET /api/items/pdf/:id
+router.post('/item',         createItem);        // ← POST /api/items
 
 module.exports = router;
